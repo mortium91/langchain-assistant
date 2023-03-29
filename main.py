@@ -5,7 +5,7 @@ from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory, ConversationSummaryMemory
 
 from config import TOKEN
-from config import openai_api_key,Bot_name,temperature_value
+from config import openai_api_key,botTemplate,temperature_value
 
 BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
 import os
@@ -21,7 +21,7 @@ async def webhook(req: Request):
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
     print(text)
-    template =Bot_name
+    template =botTemplate
     prompt = PromptTemplate(
     input_variables=["history", "human_input"],
     template=template
