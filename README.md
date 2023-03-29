@@ -6,9 +6,9 @@
 
 * Create .env file and add following variables
     ```
-    TELEGRAM_BOT_TOKEN=6226731590:AAF-DuFHUAm8t6S7nBYwCWypMEam9xH8Lac
-    OPENAI_API_KEY=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
-    temperature_value=0
+    TELEGRAM_BOT_TOKEN=
+    OPENAI_API_KEY=
+    temperature_value=
     ```
 
 * Run FastAPI Server: ``uvicorn main:app --reload --port 8000``
