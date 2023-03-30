@@ -1,5 +1,7 @@
 ## Project Setup 
 
+* Install requirements : `` pip install -r requirements.txt``
+
 * How to use you need this two api keys mentions below 
     1. Create a telegram bot using @BotFather and get the token in env variable TELEGRAM_BOT_TOKEN
     2. Get OpenAI API key and put it in env variable OPENAI_API_KEY or Cohere API key and put it in env variable 
