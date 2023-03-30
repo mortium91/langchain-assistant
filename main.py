@@ -21,10 +21,8 @@ async def webhook(req: Request):
     data = await req.json()
     
     chat_id = data['message']['chat']['id']
-    try:
-        text = data['message']['text']
-    except:
-        text = data['message']['text']
+    
+    text = data['message']['text']
     print(text)
     flag="image" in text.lower()
 
