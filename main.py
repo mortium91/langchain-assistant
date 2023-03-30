@@ -1,17 +1,19 @@
 import httpx
 from fastapi import FastAPI, Request
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
-
+import openai
 from langchain.chains.conversation.memory import ConversationBufferMemory, ConversationSummaryMemory
-
+import telegram
 from config import TOKEN
-from config import openai_api_key,botTemplate,temperature_value
+from config import openai_api_key,Bot_name,temperature_value
 
 BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
 import os
+import requests
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 client = httpx.AsyncClient()
-
+bot = telegram.Bot(token=TOKEN)
 app = FastAPI()
 
 @app.post("/webhook/")
@@ -21,22 +23,35 @@ async def webhook(req: Request):
     chat_id = data['message']['chat']['id']
     text = data['message']['text']
     print(text)
-    template =botTemplate
+    flag="image" in text.lower()
+   
+        
+    #Image generate code
+    response = openai.Image.create(
+    prompt=text,
+    n=1,
+    size="256x256",
+    )
+    #Generate Summary about text
+    image=response["data"][0]["url"]
+    template =Bot_name
     prompt = PromptTemplate(
     input_variables=["history", "human_input"],
     template=template
     )
+    
     chatgpt_chain = LLMChain(
     llm=OpenAI(temperature=temperature_value),
     prompt=prompt,
     verbose=False,
-    # memory=ConversationalBufferWindowMemory(k=2),
     memory=ConversationBufferMemory(),
     )
-     
-     
+    
     output = chatgpt_chain.predict(human_input=text)
-    print("Chatbot: ", output)
-    await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={output}")
+    
+    if flag:
+        await bot.send_photo(chat_id, image)
+    else:
+        await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={output}")
     return output
         
