@@ -13,7 +13,7 @@
 
 * Run FastAPI Server: ``uvicorn main:app --reload --port 8000``
 
-* Bind with NGROK : Ngrok http 8000
+* Bind with NGROK : ngrok http 8000
 
 * Finally Submit your bot: 
     1. Connect with telegram bot using this put telegram token and your server ip or domain to connect with telegram bot webhook: https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
