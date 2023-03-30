@@ -3,9 +3,9 @@ from fastapi import FastAPI, Request
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 import openai
 from langchain.chains.conversation.memory import ConversationBufferMemory, ConversationSummaryMemory
-import telegram
+import  telegram
 from config import TOKEN
-from config import openai_api_key,Bot_name,temperature_value
+from config import openai_api_key,botTemplate,temperature_value
 
 BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
 import os
@@ -21,20 +21,27 @@ async def webhook(req: Request):
     data = await req.json()
     
     chat_id = data['message']['chat']['id']
-    text = data['message']['text']
+    try:
+        text = data['message']['text']
+    except:
+        text = data['message']['text']
     print(text)
     flag="image" in text.lower()
-   
-        
+
     #Image generate code
-    response = openai.Image.create(
-    prompt=text,
-    n=1,
-    size="256x256",
-    )
+    try:    
+        response = openai.Image.create(
+        prompt=text,
+        n=1,
+        size="256x256",
+        )
+        deissue=False
+        image=response["data"][0]["url"]
+        
+    except:
+        deissue=True
     #Generate Summary about text
-    image=response["data"][0]["url"]
-    template =Bot_name
+    template =botTemplate
     prompt = PromptTemplate(
     input_variables=["history", "human_input"],
     template=template
@@ -47,11 +54,16 @@ async def webhook(req: Request):
     memory=ConversationBufferMemory(),
     )
     
+    
     output = chatgpt_chain.predict(human_input=text)
     
     if flag:
-        await bot.send_photo(chat_id, image)
-    else:
-        await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={output}")
-    return output
+        if deissue:
+            output="Your request was rejected as a result of our safety system. Your prompt may contain text that is not allowed by our safety system"
+        else:
+            await bot.send_photo(chat_id, image)        
+    # else:
+    await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={output}")
         
+
+    return output
