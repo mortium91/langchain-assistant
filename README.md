@@ -21,6 +21,7 @@ Setup Telegram
 
 * Run FastAPI Server: ``uvicorn main:app --reload --port 8000``
 
+(when running locally on Windows)
 * Bind with NGROK : ngrok http 8000
 
 * Finally Submit your bot: 
