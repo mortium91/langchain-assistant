@@ -31,3 +31,16 @@ Setup Telegram
 Setup Whatsapp
 ==============
 
+* Before you can send a WhatsApp message from your web language, you'll need to sign up for a Twilio account or sign into your existing account and activate the Twilio Sandbox for WhatsApp. The Sandbox allows you to prototype with WhatsApp immediately using a shared phone number without waiting for your Twilio number to be approved by WhatsApp.
+
+* After You Login In twilio You need 
+1. Account SID - Used to identify yourself in API requests
+2. Auth Token - Used to authenticate REST API requests
+
+* Set in your .env file after all done you just need to get number from twilio and authenticate code ex- Join xyz
+
+* Save Your twilio number in your contact list then send message join to join your sandbox 
+
+* After All you need to set URL in sanbox setting just save your web api url in sanbox setting 
+
+* Reference URL to follow -: https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python
