@@ -1,9 +1,13 @@
 import httpx
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request,Response
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 import openai
 from langchain.chains.conversation.memory import ConversationBufferMemory, ConversationSummaryMemory
 import  telegram
+from fastapi import FastAPI, Form, Depends
+from twilio.twiml.messaging_response import MessagingResponse
+
+
 from config import TOKEN
 from config import openai_api_key,botTemplate,temperature_value
 
@@ -21,9 +25,11 @@ async def webhook(req: Request):
     data = await req.json()
     
     chat_id = data['message']['chat']['id']
-    
-    text = data['message']['text']
-    print(text)
+    try:
+        text = data['message']['text']
+        print(text)
+    except:
+        pass
     flag="image" in text.lower()
 
     #Image generate code
@@ -65,3 +71,44 @@ async def webhook(req: Request):
         
 
     return output
+
+
+@app.post("/api")
+async def reply(Body: str = Form()):
+    
+    
+    flag="image" in Body.lower()
+    
+    response = openai.Image.create(
+        prompt=Body,
+        n=1,
+        size="256x256",
+        )
+        
+    image=response["data"][0]["url"]
+    
+    
+    template =botTemplate
+    prompt = PromptTemplate(
+    input_variables=["history", "human_input"],
+    template=template
+    )
+    
+    chatgpt_chain = LLMChain(
+    llm=OpenAI(temperature=0),
+    prompt=prompt,
+    verbose=False,
+    memory=ConversationBufferMemory(),
+    )
+    output = chatgpt_chain.predict(human_input=Body)
+   
+    resp = MessagingResponse()
+    if flag:    
+        response_msg = resp.message(output)
+        response_msg.media(image)
+    else:
+        response_msg = resp.message(output)
+        
+        
+
+    return Response(content=str(resp), media_type="application/xml")

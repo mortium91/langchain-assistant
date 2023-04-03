@@ -16,3 +16,6 @@ botTemplate= """LangChain_Assistent_Bot trained by OpenAI.
     Human: {human_input}
     LangChain_Assistent_Bot:"""
 
+account_sid = os.getenv('ACCOUNT_SID')
+auth_token = os.getenv('AUTH_TOKEN')
+
