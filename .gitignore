@@ -1,0 +1,9 @@
+env
+.env
+/.env
+ngrok.exe
+/ngrok.exe
+.__pycache__
+__pycache__
+replit.nix
+.replit
