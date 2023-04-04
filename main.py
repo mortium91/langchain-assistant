@@ -7,13 +7,14 @@ from twilio.twiml.messaging_response import MessagingResponse
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory, ConversationSummaryMemory
 
-from config import TOKEN, openai_api_key, botTemplate, temperature_value
+from config import TELEGRAM_BOT_TOKEN, OPENAI_API_KEY, BOT_TEMPLATE, TEMPERATURE_VALUE
 
-BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
+BASE_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
 # Initialize HTTP client and Telegram bot
 client = httpx.AsyncClient()
-bot = telegram.Bot(token=TOKEN)
+bot = telegram.Bot(token=TELEGRAM_BOT_TOKEN)
+my_secret = os.environ['TELEGRAM_BOT_TOKEN']
 
 # Initialize FastAPI application
 app = FastAPI()
@@ -47,14 +48,14 @@ async def telegram_webhook(req: Request):
         deissue = True
     
     # Generate a summary based on user's message
-    template = botTemplate
+    template = BOT_TEMPLATE
     prompt = PromptTemplate(
         input_variables=["history", "human_input"],
         template=template
     )
     
     chatgpt_chain = LLMChain(
-        llm=OpenAI(temperature=temperature_value),
+        llm=OpenAI(temperature=TEMPERATURE_VALUE),
         prompt=prompt,
         verbose=False,
         memory=ConversationBufferMemory(),
@@ -90,7 +91,7 @@ async def twilio_api_reply(Body: str = Form()):
     image = response["data"][0]["url"]
     
     # Generate a summary based on user's message
-    template = botTemplate
+    template = BOT_TEMPLATE
     prompt = PromptTemplate(
         input_variables=["history", "human_input"],
         template=template
