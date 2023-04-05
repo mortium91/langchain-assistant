@@ -3,7 +3,7 @@ from fastapi import FastAPI, Request,Response
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 import openai
 from langchain.chains.conversation.memory import ConversationBufferMemory, ConversationSummaryMemory
-import  telegram
+import telegram
 from fastapi import FastAPI, Form, Depends
 from twilio.twiml.messaging_response import MessagingResponse
 
