@@ -4,7 +4,6 @@ uvicorn
 httpx
 langchain
 openai
-telegram
 python-dotenv
 python-telegram
 python-telegram-bot
