@@ -16,6 +16,9 @@ OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 # Temperature value for OpenAI language model
 TEMPERATURE_VALUE = float(0.8)
 
+# DALL-E settings
+IMAGE_SIZE = "256x256"
+
 # Chatbot name for generating responses
 BOT_NAME = 'Lago'
 
