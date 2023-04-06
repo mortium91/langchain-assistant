@@ -17,6 +17,10 @@ Roadmap:
 - Docker support
 - ....
 
+## Get images from DALL-E
+
+To get images back from OpenAI's DALL-E use the text '/image' in your chat message. This will prompt to DALL-E. The default size of "256x256" can be set in the config.py
+
 
 ## Host it yourself
 
