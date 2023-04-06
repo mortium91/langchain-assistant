@@ -1,5 +1,14 @@
 ## Project Setup 
 
+[Setup on Replit guide](https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain)
+
+Roadmap:
+- Support more GPT models via config
+- Send emails
+- Add to calendar 
+- Write and store some code ideas
+- ....
+
 * Install requirements : `` pip install -r requirements.txt``
 
 ==============
