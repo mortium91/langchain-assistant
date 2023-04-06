@@ -81,7 +81,6 @@ async def twilio_api_reply(Body: str = Form()):
     
     # Check if "image" is in the user's message
     flag = "image" in Body.lower()
-    
     # Generate an image based on user's message
     response = openai.Image.create(
         prompt=Body,
@@ -100,15 +99,16 @@ async def twilio_api_reply(Body: str = Form()):
     chatgpt_chain = LLMChain(
         llm=OpenAI(temperature=0),
         prompt=prompt,
-        verbose=False,
+        verbose=True,
         memory=ConversationBufferMemory(),
     )
     output = chatgpt_chain.predict(human_input=Body)
-   
     # Create a Twilio messaging response with the generated image and summary
     resp = MessagingResponse()
     if flag:    
         response_msg = resp.message(output)
         response_msg.media(image)
     else:
-        response_msg = resp.message
+        response_msg = resp.message(output)
+
+    return Response(content=str(resp), media_type="application/xml")
