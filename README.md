@@ -10,7 +10,8 @@ If you want to try it out for free:
 
 
 Roadmap:
-- Support more GPT models via config
+- Support more GPT models via config (gpt4all??!)
+- Voice 
 - Send emails
 - Add to calendar 
 - Write and store some code ideas
