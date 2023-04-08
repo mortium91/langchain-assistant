@@ -2,12 +2,14 @@
 
 LangChain Assistant is a versatile chatbot that leverages state-of-the-art Language Models (currently GPT-3) to interact with users via Telegram and WhatsApp. The primary goal is to keep AI development open, fun, and accessible. LangChain Assistant can handle text messages, voice messages, and even generate images using OpenAI's DALL-E.
 
+
 ## Features
 
 - Communicate with GPT-3 models via configuration
 - Support for text and voice messages
 - Integration with Telegram and WhatsApp
 - Generate images using OpenAI's DALL-E
+
 
 ## Roadmap
 
@@ -18,9 +20,11 @@ LangChain Assistant is a versatile chatbot that leverages state-of-the-art Langu
 - Docker support
 - ... and more!
 
+
 ## Get Images from DALL-E
 
 To generate images using OpenAI's DALL-E, include the text '/image' in your chat message. The default image size is "256x256" and can be modified in the `config.py` file.
+
 
 ## Deployment
 
@@ -35,6 +39,7 @@ To deploy LangChain Assistant for free, follow the [Setup on Replit guide here] 
 - A Telegram bot token from @BotFather
 - An OpenAI API key
 - A Twilio account with a WhatsApp enabled phone number
+
 
 ### Installation
 
@@ -52,6 +57,7 @@ To deploy LangChain Assistant for free, follow the [Setup on Replit guide here] 
     ACCOUNT_SID= #Twillio
     AUTH_TOKEN= #Twillio
     ```
+
 
 ### Setup Telegram
 
