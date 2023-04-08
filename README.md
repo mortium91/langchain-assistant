@@ -30,7 +30,7 @@ To generate images using OpenAI's DALL-E, include the text '/image' in your chat
 
 ### Try for Free
 
-To deploy LangChain Assistant for free, follow the [Setup on Replit guide here] (https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain).
+To deploy LangChain Assistant for free, follow the [Setup on Replit guide here](https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain).
 
 
 ### Prerequisites
