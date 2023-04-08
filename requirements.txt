@@ -5,4 +5,5 @@ openai==0.10.2
 python-telegram-bot==20.0
 twilio==7.17.0
 python-dotenv==0.21.1
-numpy==1.22.2
+numpy==1.23.5
+librosa

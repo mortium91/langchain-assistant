@@ -1,40 +1,55 @@
 # LangChain Assistant
 
-A simple setup to chat with LLMs (GPT3 for now) via Telegram and Whatsapp. 
-Goal: keep the AI development open & fun!
+LangChain Assistant is a versatile chatbot that leverages state-of-the-art Language Models (currently GPT-3) to interact with users via Telegram and WhatsApp. The primary goal is to keep AI development open, fun, and accessible. LangChain Assistant can handle text messages, voice messages, and even generate images using OpenAI's DALL-E.
 
 
-## Deploy for Free
-If you want to try it out for free:
-[Setup on Replit guide](https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain)
+## Features
+
+- Communicate with GPT-3 models via configuration
+- Support for text and voice messages
+- Integration with Telegram and WhatsApp
+- Generate images using OpenAI's DALL-E
 
 
-Roadmap:
-- Support more GPT models via config (gpt4all??!)
-- Voice 
+## Roadmap
+
+- Support more GPT models via configuration
 - Send emails
-- Add to calendar 
-- Write and store some code ideas
+- Add events to calendar
+- Write and store code ideas
 - Docker support
-- ....
-
-## Get images from DALL-E
-
-To get images back from OpenAI's DALL-E use the text '/image' in your chat message. This will prompt to DALL-E. The default size of "256x256" can be set in the config.py
+- ... and more!
 
 
-## Host it yourself
+## Get Images from DALL-E
 
-* Install requirements : ``pip install -r requirements.txt``
+To generate images using OpenAI's DALL-E, include the text '/image' in your chat message. The default image size is "256x256" and can be modified in the `config.py` file.
 
 
-### Setup Telegram
+## Deployment
 
-* How to use you need this two api keys mentions below 
-    1. Create a telegram bot using @BotFather and get the token in env variable TELEGRAM_BOT_TOKEN
-    2. Get OpenAI API key and put it in env variable OPENAI_API_KEY or Cohere API key and put it in env variable 
+### Try for Free
 
-* Create .env file and add following variables
+To deploy LangChain Assistant for free, follow the [Setup on Replit guide here] (https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain).
+
+
+### Prerequisites
+
+- Python 3.7 or higher
+- A Telegram bot token from @BotFather
+- An OpenAI API key
+- A Twilio account with a WhatsApp enabled phone number
+
+
+### Installation
+
+1. Clone the repository and navigate to the project directory.
+
+2. Install the required Python packages:
+
+```pip install -r requirements.txt```
+
+3. Create a `.env` file in the project directory and add the following variables:
     ```
     TELEGRAM_BOT_TOKEN=
     OPENAI_API_KEY=
@@ -43,29 +58,36 @@ To get images back from OpenAI's DALL-E use the text '/image' in your chat messa
     AUTH_TOKEN= #Twillio
     ```
 
-* Run FastAPI Server: ``uvicorn main:app --reload --port 8000``
+
+### Setup Telegram
+
+1. Run the FastAPI server:
+```
+uvicorn main:app --reload --port 8000
+```
 
 (when running locally on Windows)
-* Bind with NGROK : ngrok http 8000
+2. Expose the local server using NGROK:
+```
+ngrok http 8000
+```
 
-* Finally Submit your bot: 
-    1. Connect with telegram bot using this put telegram token and your server ip or domain to connect with telegram bot webhook: https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
-    - YOUR_WEBHOOK_ENDPOINT: This will be complete webhook endpoint with Domain of NGROK
+3. Set up the webhook for your Telegram bot:
+
+- Replace `{YOUR_TOKEN}` with your Telegram bot token.
+- Replace `{YOUR_WEBHOOK_ENDPOINT}` with your NGROK domain followed by `/webhook/`.
+
+```
+https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
+```
 
 
-### Setup Whatsapp
+### Setup WhatsApp
 
+1. Activate the Twilio Sandbox for WhatsApp and obtain the Account SID and Auth Token.
 
-* Before you can send a WhatsApp message from your web language, you'll need to sign up for a Twilio account or sign into your existing account and activate the Twilio Sandbox for WhatsApp. The Sandbox allows you to prototype with WhatsApp immediately using a shared phone number without waiting for your Twilio number to be approved by WhatsApp.
+2. Add the Twilio WhatsApp phone number to your contacts and send a message to join the sandbox.
 
-* After You Login In twilio You need 
-1. Account SID - Used to identify yourself in API requests
-2. Auth Token - Used to authenticate REST API requests
+3. Update the webhook URL in the Twilio Sandbox settings with your FastAPI server URL.
 
-* Set in your .env file after all done you just need to get number from twilio and authenticate code ex- Join xyz
-
-* Save Your twilio number in your contact list then send message join to join your sandbox 
-
-* After All you need to set URL in sanbox setting just save your web api url in sanbox setting 
-
-* Reference URL to follow -: https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python
+For more details, follow the Twilio tutorial: [Send and Receive Media Messages with WhatsApp in Python](https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python)
