@@ -13,6 +13,9 @@ AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 # OpenAI API key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+# Choose your model between GPT-3, GPT-3.5, GPT-4
+SELECTED_MODEL = 'gpt-4'
+
 # Temperature value for OpenAI language model
 TEMPERATURE_VALUE = float(0.8)
 
