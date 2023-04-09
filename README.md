@@ -5,7 +5,7 @@ LangChain Assistant is a versatile chatbot that leverages state-of-the-art Langu
 
 ## Features
 
-- Communicate with OpenAIs GPT-3, GPT-3.5-Turbo, GPT-4 models via configuration
+- Communicate with OpenAIs GPT-3, GPT-3.5-Turbo, GPT-4 models via config.py
 - Support for text and voice messages
 - Integration with Telegram and WhatsApp
 - Generate images using OpenAI's DALL-E
