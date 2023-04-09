@@ -1,10 +1,26 @@
 import openai
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory
-from config import BOT_TEMPLATE, TEMPERATURE_VALUE, IMAGE_SIZE
+from config import BOT_TEMPLATE, TEMPERATURE_VALUE, IMAGE_SIZE, SELECTED_MODEL
 import urllib.request
 import librosa
 import soundfile as sf
+from langchain.chat_models import ChatOpenAI
+
+
+def initialize_language_model(selected_model):
+    if selected_model == 'gpt-3':
+        # Initialize GPT-3 model here
+        return OpenAI(temperature=TEMPERATURE_VALUE)
+    elif selected_model == 'gpt-3.5-turbo':
+        # Initialize GPT-3.5 model here
+        return ChatOpenAI(model_name="gpt-3.5-turbo",temperature=TEMPERATURE_VALUE)
+    elif selected_model == 'gpt-4':
+        # Initialize GPT-4 model here
+        return ChatOpenAI(model_name="gpt-4",temperature=TEMPERATURE_VALUE)
+    else:
+        raise ValueError(f"Invalid model selected: {selected_model}")
+
 
 async def process_chat_message(text: str):
     # Check if "image" is in the user's message
@@ -30,7 +46,7 @@ async def process_chat_message(text: str):
     )
 
     chatgpt_chain = LLMChain(
-        llm=OpenAI(temperature=TEMPERATURE_VALUE),
+        llm=initialize_language_model(SELECTED_MODEL),
         prompt=prompt,
         verbose=False,
         memory=ConversationBufferMemory(),
