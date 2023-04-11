@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Form, Response
 from twilio.twiml.messaging_response import MessagingResponse
-from chat_handler import process_chat_message
-from voice_handler import process_voice_message
+from .chat_handler import process_chat_message
+from .voice_handler import process_voice_message
 
 twilio_api_reply = APIRouter()
 
