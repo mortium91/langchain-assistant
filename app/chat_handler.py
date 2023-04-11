@@ -1,11 +1,11 @@
 import openai
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory
+from langchain.chat_models import ChatOpenAI
 from config import BOT_TEMPLATE, TEMPERATURE_VALUE, IMAGE_SIZE, SELECTED_MODEL
 import urllib.request
 import librosa
 import soundfile as sf
-from langchain.chat_models import ChatOpenAI
 
 
 def initialize_language_model(selected_model):
