@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from telegram_handler import telegram_webhook
-from twilio_handler import twilio_api_reply
+from .telegram_handler import telegram_webhook
+from .twilio_handler import twilio_api_reply
 
 # Create a FastAPI app instance
 app = FastAPI()
