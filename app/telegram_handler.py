@@ -2,8 +2,8 @@ import os
 from fastapi import APIRouter, Request
 import httpx
 import telegram
-from chat_handler import process_chat_message
-from voice_handler import process_voice_message
+from .chat_handler import process_chat_message
+from .voice_handler import process_voice_message
 
 TELEGRAM_BOT_TOKEN = os.environ['TELEGRAM_BOT_TOKEN']
 BASE_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
