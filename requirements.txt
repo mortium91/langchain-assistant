@@ -7,3 +7,4 @@ twilio==7.17.0
 python-dotenv==0.21.1
 numpy==1.23.5
 librosa
+uvicorn
