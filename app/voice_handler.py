@@ -3,7 +3,7 @@ import librosa
 import soundfile as sf
 import os
 import openai
-from chat_handler import process_chat_message
+from .chat_handler import process_chat_message
 
 def transcribe_audio(audio_filepath):
     with open(audio_filepath, "rb") as audio:
