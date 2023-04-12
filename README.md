@@ -14,6 +14,7 @@ LangChain Assistant is a versatile chatbot that leverages state-of-the-art Langu
 ## Roadmap
 
 - Support gpt4all
+- Support Facebook Messenger 
 - Send emails
 - Add events to calendar
 - Write and store code ideas
