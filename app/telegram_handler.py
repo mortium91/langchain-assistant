@@ -29,7 +29,7 @@ async def handle_telegram_webhook(req: Request):
         output = await process_voice_message(voice_url)
     else:
         # Process text messages
-        output = await process_chat_message(text)
+        output = await process_chat_message(text,chat_id)
 
     # Send the output as a text message or a photo with a caption, depending on the type of output
     if isinstance(output, tuple):
