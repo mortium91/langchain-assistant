@@ -3,21 +3,21 @@ import librosa
 import soundfile as sf
 import os
 import openai
-from .chat_handler import process_chat_message
+from chat_handler import process_chat_message
 
 def transcribe_audio(audio_filepath):
     with open(audio_filepath, "rb") as audio:
         transcript = openai.Audio.transcribe("whisper-1", audio)
         return transcript["text"]
 
-async def handle_voice_message(audio_filepath):
+async def handle_voice_message(audio_filepath, chat_id):
     # Transcribe the audio file
     transcribed_text = transcribe_audio(audio_filepath)
     print("transcribed text: " + transcribed_text)
-    output = await process_chat_message(transcribed_text)
+    output = await process_chat_message(transcribed_text, chat_id)
     return output
 
-async def process_voice_message(voice_url: str):
+async def process_voice_message(voice_url: str, chat_id: int):
     # Download the voice file from the URL
     voice_file = "voice_message.ogg"
     
@@ -37,7 +37,7 @@ async def process_voice_message(voice_url: str):
     sf.write(converted_voice_file, y, sr, format='wav', subtype='PCM_24')
 
     # Process the voice file (transcribe, analyze, respond, etc.)
-    output = await handle_voice_message(converted_voice_file)
+    output = await handle_voice_message(converted_voice_file, chat_id)
 
     # Clean up the voice files
     os.remove(voice_file)
