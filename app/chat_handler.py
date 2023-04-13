@@ -10,7 +10,7 @@ from langchain.llms import OpenAI
 from langchain.agents import initialize_agent
 from langchain.agents.agent_toolkits import ZapierToolkit
 from langchain.utilities.zapier import ZapierNLAWrapper
-
+from typing import Dict
 ZAPIER_NLA_API_KEY=ZAPIER_NLA_API_KEY
 
 llm = OpenAI(temperature=0)
@@ -34,23 +34,33 @@ def initialize_language_model(selected_model):
 
 
 
-async def process_chat_message(text: str):
+# Initialize a dictionary to keep track of the last message for each user
+last_messages: Dict[int, str] = {}
+
+async def process_chat_message(text: str ,chat_id: int):
     # Check if "image" is in the user's message
     flag = "/image" in text.lower()
+    mark_calendar="mark" in text.lower()
 
+
+    # Get the last 3 messages for this user
+    last_3_messages = last_messages.get(chat_id, ["", "", ""])
     
-    calendar_event="mark" in text.lower()
-    if calendar_event:
+    # Create a prompt that includes the last 3 messages as context
+    template = f"Conversation history:\n{last_3_messages[0]}\n{last_3_messages[1]}\n{last_3_messages[2]}\n\n{Bot_name}: {{human_input}}"
+    prompt = PromptTemplate(
+        input_variables=["history", "human_input"],
+        template=template
+    )
+    
+
+    if mark_calendar:
   
         cal=text.lstrip('Mark')
         print(type(cal))
         data=cal.split('-')
-        if len(data) > 1:
-            description=f"mark as a reminder {data[1]} and Send Email to him as a reminder at 10 in evening for this meeting  and also send link of webhook to him"
-            agent.run(f"Add Event on {data[0]}, {description}  ")
-        else:
-            agent.run(f"Add Event on {data[0]}")
-
+        description=f"mark as a reminder {data[1]} and Send Email to him as a reminder at 10 in evening for this meeting  and also send link of webhook to him"
+        agent.run(f"Add Event on {data[0]}, {description}  ")
 
     # Generate an image based on user's message
     try:
@@ -79,7 +89,17 @@ async def process_chat_message(text: str):
     )
 
     # Predict the response for the given input
-    output = chatgpt_chain.predict(human_input=text)
+    # Generate a response based on the user's message and the last 3 messages
+    output = chatgpt_chain.predict(history=last_3_messages, human_input=text)
+    
+    # Update the last messages for this user
+    last_messages[chat_id] = [text] + last_3_messages[:-1]
+    
+    # Send the response to the user
+    if len(output)>1:
+        output=output.lstrip('?')
+
+    # output = chatgpt_chain.predict(human_input=text)
 
     # Check if there was an issue with the image generation and handle accordingly
     if flag:
