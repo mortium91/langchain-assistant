@@ -9,6 +9,7 @@ TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 # Twilio account SID and auth token
 ACCOUNT_SID = os.getenv('ACCOUNT_SID')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
+ZAPIER_NLA_API_KEY = os.getenv('ZAPIER_NLA_API_KEY')
 
 # OpenAI API key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')

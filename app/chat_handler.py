@@ -2,10 +2,23 @@ import openai
 from langchain import OpenAI, ConversationChain, LLMChain, PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.chat_models import ChatOpenAI
-from .config import BOT_TEMPLATE, TEMPERATURE_VALUE, IMAGE_SIZE, SELECTED_MODEL
+from .config import BOT_TEMPLATE, TEMPERATURE_VALUE, IMAGE_SIZE, SELECTED_MODEL, ZAPIER_NLA_API_KEY
 import urllib.request
 import librosa
 import soundfile as sf
+from langchain.llms import OpenAI
+from langchain.agents import initialize_agent
+from langchain.agents.agent_toolkits import ZapierToolkit
+from langchain.utilities.zapier import ZapierNLAWrapper
+
+
+
+ZAPIER_NLA_API_KEY=ZAPIER_NLA_API_KEY
+
+llm = OpenAI(temperature=0)
+zapier = ZapierNLAWrapper()
+toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
+agent = initialize_agent(toolkit.get_tools(), llm, agent="zero-shot-react-description", verbose=True)
 
 
 def initialize_language_model(selected_model):
@@ -22,9 +35,20 @@ def initialize_language_model(selected_model):
         raise ValueError(f"Invalid model selected: {selected_model}")
 
 
+
 async def process_chat_message(text: str):
     # Check if "image" is in the user's message
     flag = "/image" in text.lower()
+
+    
+    google="mark" in text.lower()
+    if google:
+  
+        cal=text.lstrip('Mark')
+        print(type(cal))
+        data=cal.split('-')
+        description=f"mark as a reminder {data[1]} and Send Email to him as a reminder at 10 in evening for this meeting  and also send link of webhook to him"
+        agent.run(f"Add Event on {data[0]}, {description}  ")
 
     # Generate an image based on user's message
     try:
