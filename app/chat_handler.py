@@ -11,8 +11,6 @@ from langchain.agents import initialize_agent
 from langchain.agents.agent_toolkits import ZapierToolkit
 from langchain.utilities.zapier import ZapierNLAWrapper
 
-
-
 ZAPIER_NLA_API_KEY=ZAPIER_NLA_API_KEY
 
 llm = OpenAI(temperature=0)
@@ -41,8 +39,8 @@ async def process_chat_message(text: str):
     flag = "/image" in text.lower()
 
     
-    google="mark" in text.lower()
-    if google:
+    calendar_event="mark" in text.lower()
+    if calendar_event:
   
         cal=text.lstrip('Mark')
         print(type(cal))
