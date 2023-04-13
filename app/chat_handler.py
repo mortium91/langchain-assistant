@@ -45,8 +45,12 @@ async def process_chat_message(text: str):
         cal=text.lstrip('Mark')
         print(type(cal))
         data=cal.split('-')
-        description=f"mark as a reminder {data[1]} and Send Email to him as a reminder at 10 in evening for this meeting  and also send link of webhook to him"
-        agent.run(f"Add Event on {data[0]}, {description}  ")
+        if len(data) > 1:
+            description=f"mark as a reminder {data[1]} and Send Email to him as a reminder at 10 in evening for this meeting  and also send link of webhook to him"
+            agent.run(f"Add Event on {data[0]}, {description}  ")
+        else:
+            agent.run(f"Add Event on {data[0]}")
+
 
     # Generate an image based on user's message
     try:
