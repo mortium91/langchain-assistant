@@ -1,21 +1,33 @@
 from fastapi import APIRouter, Form, Response
 from twilio.twiml.messaging_response import MessagingResponse
-from .chat_handler import process_chat_message
-from .voice_handler import process_voice_message
+from chat_handler import process_chat_message
+from voice_handler import process_voice_message
 
 twilio_api_reply = APIRouter()
 
+
 @twilio_api_reply.post("/api")
 async def handle_twilio_api_reply(Body: str = Form(""), MediaUrl0: str = Form("")):
+    """
+    Handle incoming text or voice messages from Twilio and generate appropriate responses.
+
+    Args:
+        Body (str): Input text message.
+        MediaUrl0 (str): URL of the voice message.
+
+    Returns:
+        Response: The generated response as a text message or a photo with a caption, depending on the type of output.
+    """
     if MediaUrl0:
         # Process voice messages
-        output = await process_voice_message(MediaUrl0)
+        output = await process_voice_message(MediaUrl0, 0)
     else:
         # Process text messages
-        output = await process_chat_message(Body)
+        output = await process_chat_message(Body, 0)
 
     print(output)
     resp = MessagingResponse()
+    
     # Send the output as a text message or a photo with a caption, depending on the type of output
     if isinstance(output, tuple):
         summary, image = output

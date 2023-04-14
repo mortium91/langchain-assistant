@@ -96,3 +96,8 @@ https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
 3. Update the webhook URL in the Twilio Sandbox settings with your FastAPI server URL.
 
 For more details, follow the Twilio tutorial: [Send and Receive Media Messages with WhatsApp in Python](https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python)
+
+
+## How to set Google Calendar Event
+- Send message with this formate. 
+  - mark {{date}} - {{description}}
