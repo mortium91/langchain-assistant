@@ -1,7 +1,3 @@
-import openai
-from langchain import OpenAI, LLMChain, PromptTemplate
-from langchain.chains.conversation.memory import ConversationBufferMemory
-from langchain.chat_models import ChatOpenAI
 from typing import Dict, Union, Tuple
 from models import initialize_language_model
 from templates import get_template
@@ -14,11 +10,9 @@ last_messages: Dict[int, str] = {}
 async def process_chat_message(text: str, chat_id: int) -> Union[str, Tuple[str, str]]:
     """
     Process an incoming chat message and generate an appropriate response.
-
     Args:
         text (str): Input text message.
         chat_id (int): Unique identifier for the chat.
-
     Returns:
         Union[str, Tuple[str, str]]: The generated response as a string, or a tuple containing a string and an image URL.
     """
