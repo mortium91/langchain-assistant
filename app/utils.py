@@ -2,18 +2,23 @@ import openai
 from langchain import OpenAI, LLMChain, PromptTemplate
 from langchain.chains.conversation.memory import ConversationBufferMemory
 from langchain.chat_models import ChatOpenAI
-from config import SELECTED_MODEL, IMAGE_SIZE
+from config import SELECTED_MODEL, IMAGE_SIZE, ZAPIER_NLA_API_KEY, BOT_NAME
 from models import initialize_language_model
 from templates import get_template
 from langchain.agents.agent_toolkits import ZapierToolkit
 from langchain.utilities.zapier import ZapierNLAWrapper
 from langchain.agents import initialize_agent
 
-llm = OpenAI(temperature=0)
-zapier = ZapierNLAWrapper()
-toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
-agent = initialize_agent(toolkit.get_tools(), llm, agent="zero-shot-react-description", verbose=True)
 
+if ZAPIER_NLA_API_KEY:
+    llm = OpenAI(temperature=0)
+    zapier = ZapierNLAWrapper()
+    toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
+    agent = initialize_agent(toolkit.get_tools(), llm, agent="zero-shot-react-description", verbose=True)
+else:
+    zapier = None
+    toolkit = None
+    agent = None
 
 async def get_topic(text: str, history_string: str) -> str:
     """
@@ -112,11 +117,13 @@ def process_calendar(text: str, history_string: str) -> str:
     Args:
         text (str): Input text message.
         history_string (str): Formatted conversation history string.
-        agent: An instance of the agent.
 
     Returns:
         str: The generated response.
     """
+    if agent is None:
+        return f"{BOT_NAME}: I'm sorry, but I cannot access your calendar without proper configuration. Please configure the Zapier API key to enable calendar integration."
+
     prompt_template = get_template("calendar")
     prompt = PromptTemplate(input_variables=["history", "human_input"], template=prompt_template)
 
