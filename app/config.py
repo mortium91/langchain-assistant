@@ -3,13 +3,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Telegram Bot API token
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+# Telegram Bot API token (default: None)
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', None)
 
-# Twilio account SID and auth token
-ACCOUNT_SID = os.getenv('ACCOUNT_SID')
-AUTH_TOKEN = os.getenv('AUTH_TOKEN')
-ZAPIER_NLA_API_KEY = os.getenv('ZAPIER_NLA_API_KEY')
+# Twilio account SID and auth token (default: None)
+ACCOUNT_SID = os.getenv('ACCOUNT_SID', None)
+AUTH_TOKEN = os.getenv('AUTH_TOKEN', None)
+ZAPIER_NLA_API_KEY = os.getenv('ZAPIER_NLA_API_KEY', None)
 
 # OpenAI API key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
