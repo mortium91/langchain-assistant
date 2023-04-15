@@ -16,7 +16,6 @@ LangChain Assistant is a versatile chatbot that leverages state-of-the-art Langu
 - Support gpt4all
 - Support Facebook Messenger 
 - Send emails
-- Add events to calendar
 - Write and store code ideas
 - Docker support
 - AGI...
@@ -36,7 +35,7 @@ To deploy LangChain Assistant for free on Replit:
 
 - [Telegram guide](https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain)
 - [WhatsApp Guide](https://searchwith.ai/blog/create-your-own-chatgpt-ai-assistant-on-whatsapp)
-
+- [Guide to setup Zapier NLA](https://searchwith.ai/blog/let-chatgpt-manage-your-calendar-via-voice-on-telegram-and-whatsapp/)
 
 ### Prerequisites
 
@@ -59,8 +58,9 @@ To deploy LangChain Assistant for free on Replit:
     TELEGRAM_BOT_TOKEN=
     OPENAI_API_KEY=
     TEMPERATURE_VALUE=
-    ACCOUNT_SID= #Twillio
-    AUTH_TOKEN= #Twillio
+    ACCOUNT_SID= #Twilio
+    AUTH_TOKEN= #Twilio
+    TWILIO_WHATSAPP_NUMBER = #Twilio sandbox / business number
     ```
 
 
