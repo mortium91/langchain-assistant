@@ -9,6 +9,11 @@ TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', None)
 # Twilio account SID and auth token (default: None)
 ACCOUNT_SID = os.getenv('ACCOUNT_SID', None)
 AUTH_TOKEN = os.getenv('AUTH_TOKEN', None)
+
+# The Twilio sandbox or own business number
+TWILIO_WHATSAPP_NUMBER = os.getenv('TWILIO_WHATSAPP_NUMBER', None)
+
+# You Personal Zapier NLA API key for calendar management
 ZAPIER_NLA_API_KEY = os.getenv('ZAPIER_NLA_API_KEY', None)
 
 # OpenAI API key
