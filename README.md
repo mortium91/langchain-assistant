@@ -99,5 +99,4 @@ For more details, follow the Twilio tutorial: [Send and Receive Media Messages w
 
 
 ## How to set Google Calendar Event
-- Send message with this formate. 
-  - mark {{date}} - {{description}}
+- [Guide to setup Zapier NLA](https://searchwith.ai/blog/let-chatgpt-manage-your-calendar-via-voice-on-telegram-and-whatsapp/)
