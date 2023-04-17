@@ -9,3 +9,4 @@ numpy==1.23.5
 uvicorn==0.21.1
 librosa
 python-multipart
+pinecone-client==2.2.1
