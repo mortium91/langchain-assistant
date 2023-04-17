@@ -1,6 +1,6 @@
 # LangChain Assistant
 
-*"Create your own ChatGPT on Telegram, WhatsApp and Facebook Messenger!"*
+*"Build your own ChatGPT on Telegram, WhatsApp and Facebook Messenger!"*
 
 LangChain Assistant is a versatile chatbot that leverages state-of-the-art Language Models (currently GPT-3, GPT-3.5-Turbo and GPT-4) to interact with users via Telegram, WhatsApp and Facebook Messenger. The primary goal is to keep AI development open, fun, and accessible. LangChain Assistant can handle text messages, voice messages, put stuff in your calendar and even generate images using OpenAI's DALL-E.
 
