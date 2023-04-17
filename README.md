@@ -1,14 +1,15 @@
 # LangChain Assistant
 
-LangChain Assistant is a versatile chatbot that leverages state-of-the-art Language Models (currently GPT-3) to interact with users via Telegram and WhatsApp. The primary goal is to keep AI development open, fun, and accessible. LangChain Assistant can handle text messages, voice messages, and even generate images using OpenAI's DALL-E.
+LangChain Assistant is a versatile chatbot that leverages state-of-the-art Language Models (currently GPT-3) to interact with users via Telegram, WhatsApp and Facebook Messenger. The primary goal is to keep AI development open, fun, and accessible. LangChain Assistant can handle text messages, voice messages, and even generate images using OpenAI's DALL-E.
 
 
 ## Features
 
 - Communicate with OpenAIs GPT-3, GPT-3.5-Turbo, GPT-4 models via config.py
 - Support for text and voice messages
-- Integration with Telegram and WhatsApp
+- Integration with Telegram, WhatsApp and Facebook Messenger
 - Generate images using OpenAI's DALL-E
+- Add Google Calendar events via Zapier NLA
 
 
 ## Roadmap
@@ -61,6 +62,7 @@ To deploy LangChain Assistant for free on Replit:
     ACCOUNT_SID= #Twilio
     AUTH_TOKEN= #Twilio
     TWILIO_WHATSAPP_NUMBER = #Twilio sandbox / business number
+    FACEBOOK_PAGE_ID= #for Facebook Messenger integration
     ```
 
 
@@ -94,6 +96,9 @@ https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
 2. Add the Twilio WhatsApp phone number to your contacts and send a message to join the sandbox.
 
 3. Update the webhook URL in the Twilio Sandbox settings with your FastAPI server URL.
+
+### Setup WhatsApp
+- Guide coming soon
 
 For more details, follow the Twilio tutorial: [Send and Receive Media Messages with WhatsApp in Python](https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python)
 
