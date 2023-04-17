@@ -35,6 +35,7 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
     else:
         twilio_phone_number = f'whatsapp:{TWILIO_WHATSAPP_NUMBER}'
 
+    # Rest of the function remains unchanged
     if is_voice:
         # Process voice messages
         output = await process_voice_message(message, chat_id)
@@ -119,3 +120,4 @@ async def handle_twilio_api_reply(request: Request, Body: str = Form(""), MediaU
     # Return an empty response to Twilio
     resp = MessagingResponse()
     return Response(content=str(resp), media_type="application/xml")
+
