@@ -1,33 +1,45 @@
 import asyncio
 from fastapi import APIRouter, Form, Response, Request
 from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioException
 from chat_handler import process_chat_message
 from voice_handler import process_voice_message
-from config import ACCOUNT_SID, AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER
+from config import ACCOUNT_SID, AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, FACEBOOK_PAGE_ID
 
 twilio_api_reply = APIRouter()
 
-async def send_twilio_response(chat_id: str, message: str, is_voice: bool = False):
+async def send_twilio_response(chat_id: str, message: str, platform: str = "whatsapp", is_voice: bool = False):
     """
     Process an incoming chat or voice message and send a response using Twilio.
 
     Args:
         chat_id (str): Unique identifier for the chat.
         message (str): Input message, either text or a URL of a voice message.
+        platform (str): Messaging platform, either "whatsapp" or "messenger". Default is "whatsapp".
         is_voice (bool): Whether the input message is a voice message (True) or a text message (False). Default is False.
     """
 
-    if not TWILIO_WHATSAPP_NUMBER:
-      print("Twilio WhatsApp number not configured. Please set the TWILIO_WHATSAPP_NUMBER environment variable.")
-      return
+    if platform not in ("whatsapp", "messenger"):
+        raise ValueError("Invalid platform specified. Valid platforms are 'whatsapp' and 'messenger'.")
 
-    # Replace 'your_twilio_whatsapp_number' with the variable from config.py
-    twilio_phone_number = f'whatsapp:{TWILIO_WHATSAPP_NUMBER}'
+    if platform == "whatsapp" and not TWILIO_WHATSAPP_NUMBER:
+        print("Twilio WhatsApp number not configured. Please set the TWILIO_WHATSAPP_NUMBER environment variable.")
+        return
+    elif platform == "messenger" and not FACEBOOK_PAGE_ID:
+        print("Facebook Page ID not configured. Please set the FACEBOOK_PAGE_ID environment variable.")
+        return
 
-    print(f"Twilio phone number: {twilio_phone_number}")
-    print(f"Chat ID: {chat_id}")
+    if platform == "messenger":
+        twilio_phone_number = f'messenger:{FACEBOOK_PAGE_ID}'
+    else:
+        twilio_phone_number = f'whatsapp:{TWILIO_WHATSAPP_NUMBER}'
 
+      # Inside the send_twilio_response function
+    print(f"From address: {twilio_phone_number}")
+    print(f"To address: {chat_id}")
 
+    # Rest of the function remains unchanged
     if is_voice:
         # Process voice messages
         output = await process_voice_message(message, chat_id)
@@ -87,18 +99,23 @@ async def send_twilio_response(chat_id: str, message: str, is_voice: bool = Fals
 async def handle_twilio_api_reply(request: Request, Body: str = Form(""), MediaUrl0: str = Form("")):
     form_data = await request.form()
     chat_id = form_data.get("From")
+    platform = form_data.get("To")
 
-    # Ensure the 'whatsapp:' prefix is present in the chat_id
-    if not chat_id.startswith('whatsapp:'):
-        chat_id = f'whatsapp:{chat_id}'
-    
-    # Only process Twilio messages if the Twilio WhatsApp number is configured
-    if TWILIO_WHATSAPP_NUMBER:
+    if platform.startswith("whatsapp"):
+        platform = "whatsapp"
+    elif platform.startswith("messenger"):
+        platform = "messenger"
+    else:
+        return Response(content="Invalid platform", media_type="text/plain", status_code=400)
+
+    # Only process Twilio messages if the Twilio WhatsApp number or Facebook Page ID is configured
+    if (platform == "whatsapp" and TWILIO_WHATSAPP_NUMBER) or (platform == "messenger" and FACEBOOK_PAGE_ID):
         if MediaUrl0:
-            asyncio.create_task(send_twilio_response(chat_id, MediaUrl0, is_voice=True))
+            asyncio.create_task(send_twilio_response(chat_id, MediaUrl0, platform=platform, is_voice=True))
         else:
-            asyncio.create_task(send_twilio_response(chat_id, Body))
+            asyncio.create_task(send_twilio_response(chat_id, Body, platform=platform))
 
     # Return an empty response to Twilio
     resp = MessagingResponse()
     return Response(content=str(resp), media_type="application/xml")
+
