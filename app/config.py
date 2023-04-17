@@ -33,3 +33,6 @@ IMAGE_SIZE = "256x256"
 
 # Chatbot name for generating responses
 BOT_NAME = 'Lago'
+
+# Use BabyAGI or not?
+BABYAGI = False

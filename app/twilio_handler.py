@@ -5,14 +5,14 @@ from twilio.rest import Client
 from twilio.base.exceptions import TwilioException
 from chat_handler import process_chat_message
 from voice_handler import process_voice_message
-from config import ACCOUNT_SID, AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, FACEBOOK_PAGE_ID
+from config import BABYAGI, ACCOUNT_SID, AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, FACEBOOK_PAGE_ID
+from babyagi import process_task
 
 twilio_api_reply = APIRouter()
 
 async def send_twilio_response(chat_id: str, message: str, platform: str = "whatsapp", is_voice: bool = False):
     """
     Process an incoming chat or voice message and send a response using Twilio.
-
     Args:
         chat_id (str): Unique identifier for the chat.
         message (str): Input message, either text or a URL of a voice message.
@@ -35,17 +35,19 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
     else:
         twilio_phone_number = f'whatsapp:{TWILIO_WHATSAPP_NUMBER}'
 
-      # Inside the send_twilio_response function
-    print(f"From address: {twilio_phone_number}")
-    print(f"To address: {chat_id}")
-
     # Rest of the function remains unchanged
     if is_voice:
         # Process voice messages
         output = await process_voice_message(message, chat_id)
     else:
-        # Process text messages
-        output = await process_chat_message(message, chat_id)
+        if BABYAGI:
+          # Process text messages
+          if message.startswith("/task"):
+              task = message[5:]
+              await process_task(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
+              output = task
+        else:
+            output = await process_chat_message(message, chat_id)
 
     # Initialize Twilio response
     resp = MessagingResponse()
@@ -113,7 +115,7 @@ async def handle_twilio_api_reply(request: Request, Body: str = Form(""), MediaU
         if MediaUrl0:
             asyncio.create_task(send_twilio_response(chat_id, MediaUrl0, platform=platform, is_voice=True))
         else:
-            asyncio.create_task(send_twilio_response(chat_id, Body, platform=platform))
+            asyncio.create_task(send_twilio_response(chat_id, Body.strip(), platform=platform))
 
     # Return an empty response to Twilio
     resp = MessagingResponse()
