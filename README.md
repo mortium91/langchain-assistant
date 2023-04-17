@@ -99,7 +99,7 @@ https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
 
 3. Update the webhook URL in the Twilio Sandbox settings with your FastAPI server URL.
 
-### Setup WhatsApp
+### Setup Facebook Messenger
 - Guide coming soon
 
 For more details, follow the Twilio tutorial: [Send and Receive Media Messages with WhatsApp in Python](https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python)
