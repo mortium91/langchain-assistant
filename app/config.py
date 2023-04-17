@@ -13,6 +13,9 @@ AUTH_TOKEN = os.getenv('AUTH_TOKEN', None)
 # The Twilio sandbox or own business number
 TWILIO_WHATSAPP_NUMBER = os.getenv('TWILIO_WHATSAPP_NUMBER', None)
 
+# The facebook page id from your Facebook Messenger App
+FACEBOOK_PAGE_ID = os.getenv('FACEBOOK_PAGE_ID', None)
+
 # You Personal Zapier NLA API key for calendar management
 ZAPIER_NLA_API_KEY = os.getenv('ZAPIER_NLA_API_KEY', None)
 
