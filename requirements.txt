@@ -1,7 +1,7 @@
 fastapi==0.91.0
 httpx==0.23.1
 langchain==0.0.124
-openai==0.10.2
+openai==0.26.5
 python-telegram-bot==20.0
 twilio==7.17.0
 python-dotenv==0.21.1
