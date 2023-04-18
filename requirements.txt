@@ -1,7 +1,7 @@
 fastapi==0.91.0
 httpx==0.23.1
-langchain==0.0.124
-openai==0.10.2
+langchain==0.0.142
+openai==0.27.2
 python-telegram-bot==20.0
 twilio==7.17.0
 python-dotenv==0.21.1
@@ -9,3 +9,4 @@ numpy==1.23.5
 uvicorn==0.21.1
 librosa
 python-multipart
+pinecone-client==2.2.1

@@ -179,7 +179,7 @@ async def process_task(objective: str, chat_id: str, platform='telegram', client
                 "task": task['task_name'], "result": result})])
 
         # Step 3: Create new tasks and reprioritize task list
-        if task_id_counter < 11:
+        if task_id_counter < 6:
             print(f"tt: {task_id_counter}")
             new_tasks = task_creation_agent(objective, enriched_result, task["task_name"], [
                                             t["task_name"] for t in task_list])

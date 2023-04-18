@@ -1,5 +1,6 @@
 from langchain.chat_models import ChatOpenAI
 from config import TEMPERATURE_VALUE
+from langchain import OpenAI
 
 def initialize_language_model(selected_model):
     if selected_model == 'gpt-3':
