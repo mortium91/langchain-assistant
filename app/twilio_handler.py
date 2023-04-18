@@ -39,15 +39,14 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
     if is_voice:
         # Process voice messages
         output = await process_voice_message(message, chat_id)
-    else:
+    elif BABYAGI and message.startswith("/task"):
         if BABYAGI:
           # Process text messages
-          if message.startswith("/task"):
-              task = message[5:]
-              await process_task(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
-              output = task
-        else:
-            output = await process_chat_message(message, chat_id)
+            task = message[5:]
+            await process_task(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
+            output = task
+    else:
+      output = await process_chat_message(message, chat_id)
 
     # Initialize Twilio response
     resp = MessagingResponse()

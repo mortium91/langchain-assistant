@@ -39,6 +39,7 @@ To deploy LangChain Assistant for free on Replit:
 - [Telegram guide](https://searchwith.ai/blog/your-own-chatgpt-ai-assistant-on-telegram-with-langchain)
 - [WhatsApp Guide](https://searchwith.ai/blog/create-your-own-chatgpt-ai-assistant-on-whatsapp)
 - [Guide to setup Zapier NLA](https://searchwith.ai/blog/let-chatgpt-manage-your-calendar-via-voice-on-telegram-and-whatsapp/)
+- Facebook Messenger (guide coming soon)
 
 ### Prerequisites
 
@@ -64,7 +65,7 @@ To deploy LangChain Assistant for free on Replit:
     ACCOUNT_SID= #Twilio
     AUTH_TOKEN= #Twilio
     TWILIO_WHATSAPP_NUMBER = #Twilio sandbox / business number
-    FACEBOOK_PAGE_ID= #for Facebook Messenger integration
+    FACEBOOK_PAGE_ID = #
     ```
 
 
@@ -103,6 +104,11 @@ https://api.telegram.org/bot{YOUR_TOKEN}/setWebhook?url={YOUR_WEBHOOK_ENDPOINT}
 - Guide coming soon
 
 For more details, follow the Twilio tutorial: [Send and Receive Media Messages with WhatsApp in Python](https://www.twilio.com/docs/whatsapp/tutorial/send-and-receive-media-messages-whatsapp-python)
+
+
+### Facebook Messenger
+
+- More info soon. Info for now: https://support.twilio.com/hc/en-us/articles/360018783533-Integrating-Facebook-Messenger-with-Twilio-Flex
 
 
 ## How to set Google Calendar Event
