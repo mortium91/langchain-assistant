@@ -6,7 +6,7 @@ from twilio.base.exceptions import TwilioException
 from chat_handler import process_chat_message
 from voice_handler import process_voice_message
 from config import BABYAGI, ACCOUNT_SID, AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, FACEBOOK_PAGE_ID
-from babyagi import process_task
+from babyagi import process_objective_with_babyagi
 
 twilio_api_reply = APIRouter()
 
@@ -43,7 +43,7 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
         if BABYAGI:
           # Process text messages
             task = message[5:]
-            await process_task(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
+            await process_objective_with_babyagi(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
             output = task
     else:
       output = await process_chat_message(message, chat_id)

@@ -35,4 +35,4 @@ IMAGE_SIZE = "256x256"
 BOT_NAME = 'Lago'
 
 # Use BabyAGI or not?
-BABYAGI = False
+BABYAGI = True

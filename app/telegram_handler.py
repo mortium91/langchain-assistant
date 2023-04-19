@@ -5,7 +5,9 @@ import telegram
 from chat_handler import process_chat_message
 from voice_handler import process_voice_message
 from config import TELEGRAM_BOT_TOKEN, BABYAGI
-from babyagi import process_task
+from babyagi import process_objective_with_babyagi
+
+
 
 BASE_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 client = httpx.AsyncClient()
@@ -53,7 +55,7 @@ async def handle_telegram_webhook(req: Request):
                   is_task = True
                   task = text[5:]
                   print(task)
-                  await process_task(task, chat_id=chat_id, platform='telegram', client=client, base_url=BASE_URL,)
+                  await process_objective_with_babyagi(task, chat_id=chat_id, platform='telegram', client=client, base_url=BASE_URL)
                   return {"message": task}
         else:
             output = await process_chat_message(text, chat_id)
