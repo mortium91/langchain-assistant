@@ -35,6 +35,7 @@ async def handle_telegram_webhook(req: Request):
         return {"message": "Telegram bot token is not configured. Please set the TELEGRAM_BOT_TOKEN environment variable."}
 
     data = await req.json()
+    print(data)
     chat_id = data['message']['chat']['id']
     text = data['message'].get('text', '')
     voice = data['message'].get('voice', None)
@@ -47,25 +48,24 @@ async def handle_telegram_webhook(req: Request):
         voice_url = voice_file_info.file_path
 
         output = await process_voice_message(voice_url, chat_id)
+
+    elif BABYAGI and text.startswith("/task"):
+        # Process text messages with Babyagi
+        task = text[5:]
+        print(task)
+        process_objective_with_babyagi(task, chat_id=chat_id, platform='telegram', client=client, base_url=BASE_URL)
+        return {"message": task}
+
     else:
-        if BABYAGI:
-          # Process text messages
-          if data["message"].get("entities") is not None:
-              if text[0:5] == "/task":
-                  is_task = True
-                  task = text[5:]
-                  print(task)
-                  await process_objective_with_babyagi(task, chat_id=chat_id, platform='telegram', client=client, base_url=BASE_URL)
-                  return {"message": task}
-        else:
-            output = await process_chat_message(text, chat_id)
+        # Process normal text messages
+        output = await process_chat_message(text, chat_id)
 
     # Send the output as a text message or a photo with a caption, depending on the type of output
-            if isinstance(output, tuple):
-                summary, image = output
-                await bot.send_photo(chat_id, image)
-                await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={summary}")
-            else:
-                await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={output}")
+    if isinstance(output, tuple):
+        summary, image = output
+        await bot.send_photo(chat_id, image)
+        await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={summary}")
+    else:
+        await client.get(f"{BASE_URL}/sendMessage?chat_id={chat_id}&text={output}")
 
-            return {"message": output}
+    return {"message": output}

@@ -34,19 +34,19 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
         twilio_phone_number = f'messenger:{FACEBOOK_PAGE_ID}'
     else:
         twilio_phone_number = f'whatsapp:{TWILIO_WHATSAPP_NUMBER}'
-
+    print(message)
     # Rest of the function remains unchanged
     if is_voice:
         # Process voice messages
         output = await process_voice_message(message, chat_id)
     elif BABYAGI and message.startswith("/task"):
-        if BABYAGI:
-          # Process text messages
-            task = message[5:]
-            await process_objective_with_babyagi(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
-            output = task
+        # Process text messages with Babyagi
+        task = message[5:]
+        await process_objective_with_babyagi(task, chat_id=chat_id, platform='twilio', client=None, base_url=None)
+        output = task
     else:
-      output = await process_chat_message(message, chat_id)
+        # Process normal text messages
+        output = await process_chat_message(message, chat_id)
 
     # Initialize Twilio response
     resp = MessagingResponse()
@@ -60,12 +60,12 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
         response_msg = resp.message(output)
 
     # Send the message using Twilio client
-    from twilio.rest import Client
     account_sid = ACCOUNT_SID
     auth_token = AUTH_TOKEN
     client = Client(account_sid, auth_token)
 
     if is_voice:
+        # Send voice messages
         if isinstance(output, tuple):
             summary, image = output
             client.messages.create(
@@ -81,6 +81,7 @@ async def send_twilio_response(chat_id: str, message: str, platform: str = "what
                 to=chat_id
             )
     else:
+        # Send text messages
         if isinstance(output, tuple):
             summary, image = output
             client.messages.create(

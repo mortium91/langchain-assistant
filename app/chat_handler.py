@@ -22,7 +22,7 @@ async def process_chat_message(text: str, chat_id: int) -> Union[str, Tuple[str,
 
     # Determine the topic
     topic = await get_topic(text, history_string)
-
+    print('topic: ', topic)
     # Process the message based on the topic
     output = ""
     if topic == "chat":

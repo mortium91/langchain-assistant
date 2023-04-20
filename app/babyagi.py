@@ -10,14 +10,16 @@ from twilio.rest import Client
 from twilio.base.exceptions import TwilioException
 from config import BABYAGI, ACCOUNT_SID, AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, FACEBOOK_PAGE_ID
 from langchain.docstore import InMemoryDocstore
-from langchain import LLMChain, OpenAI, PromptTemplate, FAISS, SerpAPIWrapper
+from langchain import LLMChain, OpenAI, PromptTemplate, FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains.base import Chain
 from pydantic import BaseModel, Field
 from langchain.llms import BaseLLM
 from langchain.vectorstores.base import VectorStore
-from langchain.agents import ZeroShotAgent, Tool, AgentExecutor
 import faiss
+import asyncio
+from langchain.agents import ZeroShotAgent, Tool, AgentExecutor
+from langchain import OpenAI, SerpAPIWrapper, LLMChain
 
 
 if BABYAGI:
@@ -58,6 +60,12 @@ if BABYAGI:
         index = faiss.IndexFlatL2(embedding_size)
         vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
 
+class AsyncAgentExecutor(AgentExecutor):
+    async def run(self, objective: str, context: List[str], task: str) -> str:
+        loop = asyncio.get_event_loop()
+        args = {"objective": objective, "context": context, "task": task}
+        result = await loop.run_in_executor(None, super().run, args)
+        return result
 
 class TaskCreationChain(LLMChain):
     """Chain to generates tasks."""
@@ -118,7 +126,6 @@ tools = [
         description="useful for when you need to come up with todo lists. Input: an objective to create a todo list for. Output: a todo list for that objective. Please be very clear what the objective is!"
     )
 ]
-
 
 prefix = """You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}."""
 suffix = """Question: {task}
@@ -205,25 +212,18 @@ class BabyAGI(Chain, BaseModel):
     task_list: deque = Field(default_factory=deque)
     task_creation_chain: TaskCreationChain = Field(...)
     task_prioritization_chain: TaskPrioritizationChain = Field(...)
-    execution_chain: AgentExecutor = Field(...)
+    execution_chain: AsyncAgentExecutor = Field(...)
     task_id_counter: int = Field(1)
     vectorstore: VectorStore = Field(init=False)
     max_iterations: Optional[int] = None
-        
+
     class Config:
         """Configuration for this pydantic object."""
         arbitrary_types_allowed = True
 
     def add_task(self, task: Dict):
         self.task_list.append(task)
-  
-    async def send_message(self, chat_id: str, message: str, platform: str, client=None, base_url=None):
-      if platform == 'telegram':
-          await client.get(f"{base_url}/sendMessage?chat_id={chat_id}&text={message}")
-      elif platform == 'twilio':
-          await self.send_twilio_message(chat_id, message)
-  
-  
+
     def print_task_list(self):
         print("\033[95m\033[1m" + "\n*****TASK LIST*****\n" + "\033[0m\033[0m")
         for t in self.task_list:
@@ -236,51 +236,49 @@ class BabyAGI(Chain, BaseModel):
     def print_task_result(self, result: str):
         print("\033[93m\033[1m" + "\n*****TASK RESULT*****\n" + "\033[0m\033[0m")
         print(result)
-        
-    @property
-    def input_keys(self) -> List[str]:
+
+    @classmethod
+    def input_keys(cls) -> List[str]:
         return ["objective"]
     
-    @property
-    def output_keys(self) -> List[str]:
+    @classmethod
+    def output_keys(cls) -> List[str]:
         return []
 
-    async def _call(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
-        objective = inputs['objective']
-        chat_id = inputs['chat_id']
-        platform = inputs['platform']
-        client = inputs.get('client')
-        base_url = inputs.get('base_url')
+    async def send_message(self, chat_id: str, message: str, platform: str, client=None, base_url=None):
+        if platform == 'telegram':
+            await client.get(f"{base_url}/sendMessage?chat_id={chat_id}&text={message}")
+        elif platform == 'twilio':
+            await self.send_twilio_message(chat_id, message)
 
+    async def _call(self, inputs: Dict[str, Any], chat_id: str, platform: str, client=None, base_url=None) -> Dict[str, Any]:
+        objective = inputs['objective']
         first_task = {
             "task_id": 1,
-            "task_name": YOUR_FIRST_TASK
+            "task_name": "YOUR_FIRST_TASK"
         }
         self.add_task(first_task)
 
-        self.task_id_counter = 1
+        num_iters = 0
         while True:
             if self.task_list:
                 self.print_task_list()
-                temp = ""
-                for t in self.task_list:
-                    tsk = str(t['task_id']) + ": " + t['task_name']
-                    temp = temp + tsk + "\n"
 
-                await self.send_message(chat_id, temp, platform, client, base_url)
-
+                # Step 1: Pull the first task
                 task = self.task_list.popleft()
                 self.print_next_task(task)
+                temp = f"*****NEXT TASK*****\n{task['task_id']}: {task['task_name']}"
+                await self.send_message(chat_id, temp, platform, client, base_url)
 
-                next_tsk = str(task['task_id']) + ": " + task['task_name']
-                await self.send_message(chat_id, next_tsk, platform, client, base_url)
+                # Step 2: Execute the task
+                result = execute_task(self.vectorstore, self.execution_chain, objective, task["task_name"])
 
-                result = await self.execution_chain.call({"objective": objective, "task_name": task["task_name"]})
                 this_task_id = int(task["task_id"])
                 self.print_task_result(result)
+                temp =  f"\033[93m\033[1m \n*****TASK RESULT*****\n \033[0m\033[0m \n {result}"
+                await self.send_message(chat_id, temp, platform, client, base_url)
 
-                await self.send_message(chat_id, result, platform, client, base_url)
-
+                # Step 4: Store the result in Pinecone
                 result_id = f"result_{task['task_id']}"
                 self.vectorstore.add_texts(
                     texts=[result],
@@ -288,26 +286,25 @@ class BabyAGI(Chain, BaseModel):
                     ids=[result_id],
                 )
 
-                if self.task_id_counter < 6:
-                    new_tasks = get_next_task(
-                        self.task_creation_chain, result, task["task_name"], [t["task_name"] for t in self.task_list], objective
+                # Step 5: Create new tasks and reprioritize task list
+                new_tasks = get_next_task(
+                    self.task_creation_chain, result, task["task_name"], [t["task_name"] for t in self.task_list], objective
+                )
+                for new_task in new_tasks:
+                    self.task_id_counter += 1
+                    new_task.update({"task_id": self.task_id_counter})
+                    self.add_task(new_task)
+                self.task_list = deque(
+                    prioritize_tasks(
+                        self.task_prioritization_chain, this_task_id, list(self.task_list), objective
                     )
-                    for new_task in new_tasks:
-                        self.task_id_counter += 1
-                        new_task.update({"task_id": self.task_id_counter})
-                        self.add_task(new_task)
-                    self.task_list = deque(
-                        prioritize_tasks(
-                            self.task_prioritization_chain, this_task_id, list(self.task_list), objective
-                        )
-                    )
+                )
 
-            if len(self.task_list) < 1:
-                print("Tasks completed")
-                await self.send_message(chat_id, "\n\nTask completed", platform, client, base_url)
+            num_iters += 1
+            if self.max_iterations is not None and num_iters == self.max_iterations:
                 break
-        return {}
 
+        return {}
   
     @classmethod
     def from_llm(
@@ -336,22 +333,17 @@ class BabyAGI(Chain, BaseModel):
             **kwargs
         )
 
+
 async def process_objective_with_babyagi(objective: str, chat_id: str, platform: str, client=None, base_url=None):
     llm = OpenAI(temperature=0)
 
     verbose = False
-    max_iterations: Optional[int] = 2
-    baby = BabyAGI.from_llm(
+    max_iterations: Optional[int] = 3
+    baby_agi = BabyAGI.from_llm(
         llm=llm,
         vectorstore=vectorstore,
         verbose=verbose,
         max_iterations=max_iterations
     )
 
-    await baby._call({
-    "objective": objective,
-    "chat_id": chat_id,
-    "platform": platform,
-    "client": client,
-    "base_url": base_url
-})
+    await baby_agi._call({"objective": objective}, chat_id=chat_id, platform=platform, client=client, base_url=base_url)
