@@ -10,3 +10,5 @@ uvicorn==0.21.1
 librosa
 python-multipart
 pinecone-client==2.2.1
+tiktoken==0.3.3
+faiss-cpu==1.7.4

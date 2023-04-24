@@ -36,3 +36,6 @@ BOT_NAME = 'Lago'
 
 # Use BabyAGI or not?
 BABYAGI = False
+
+# Where to store conversation memories etc.
+HISTORY_DIR = './history'

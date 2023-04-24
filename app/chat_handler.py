@@ -26,7 +26,7 @@ async def process_chat_message(text: str, chat_id: int) -> Union[str, Tuple[str,
     # Process the message based on the topic
     output = ""
     if topic == "chat":
-        output = process_chat(text, history_string)
+        output = process_chat(chat_id, text, history_string)
     elif topic == "image":
         output = await process_image(text, history_string)
     elif topic == "calendar":
