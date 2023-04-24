@@ -39,3 +39,6 @@ BABYAGI = False
 
 # Where to store conversation memories etc.
 HISTORY_DIR = './history'
+
+# TODO Numbers For testing purposes only, should be changed later
+MEMORYCONFIG = {'K_contextual':2, 'K_latest':4} 

@@ -57,17 +57,17 @@ def load_memory(chat_id: str):
         pass
 
     # Create new memory
-
+    memconfig = config.MEMORYCONFIG
     embedding_size = 1536 # Dimensions of the OpenAIEmbeddings
     index = faiss.IndexFlatL2(embedding_size)
     embedding_fn = OpenAIEmbeddings(openai_api_key=config.OPENAI_API_KEY).embed_query
     vectorstore = FAISS(embedding_fn, index, InMemoryDocstore({}), {})
-    retriever = vectorstore.as_retriever(search_kwargs=dict(k=2))
+    retriever = vectorstore.as_retriever(search_kwargs=dict(k=memconfig["K_latest"]))
 
     conv_memory = ConversationBufferWindowMemory(
         memory_key="recent_history",
         input_key="human_input",
-        k=4, # Number of latest interactions to keep in memory
+        k=memconfig["K_latest"], # Number of latest interactions to keep in memory
     )
 
     faissmemory = VectorStoreRetrieverMemory(retriever=retriever)
