@@ -43,7 +43,7 @@ To deploy LangChain Assistant for free on Replit:
 
 ### Prerequisites
 
-- Python 3.7 or higher
+- Python 3.9 or higher
 - A Telegram bot token from @BotFather
 - An OpenAI API key
 - A Twilio account with a WhatsApp enabled phone number
